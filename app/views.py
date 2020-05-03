@@ -37,12 +37,15 @@ def upload():
 
     # Validate file upload on submit
     if request.method == 'POST' and form.validate_on_submit():
-        img = form.upload.data
-        filename = secure_filename(img.filename)
-        img.save(os.path.join(app.config["UPLOAD_FOLDER"], filename)) # Get file data and save to your uploads folder
+
+        # Get file data and save to your uploads folder
+        pictures = form.pictures.data 
+        filename=secure_filename(pictures.filename)
+        pictures.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
         flash('File Saved', 'success')
         return redirect(url_for('home'))
-    return render_template('upload.html', form=form)
+    flash_errors(form)
+    return render_template('upload.html', form = form)
 
 def get_uploaded_images():
     pictures= []
@@ -59,7 +62,6 @@ def get_uploaded_images():
 def files():
     images = get_uploaded_images()
     return render_template('files.html', images= images)
-
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
